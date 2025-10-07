@@ -27,12 +27,9 @@ body {
   z-index:10; animation: fadeOutIntro 1s ease 3.5s forwards; 
 }
 #intro img { width:200px; animation: logoGrow 3s ease forwards; }
-@keyframes logoGrow {
-  0% { transform: scale(0.5); opacity: 0; }
-  50% { transform: scale(0.8); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
+@keyframes logoGrow { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(0.8); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes fadeOutIntro { to { opacity:0; visibility:hidden; } }
+
 header {
   position: fixed; top:0; width:100%; padding:12px 0;
   text-align:center; background: rgba(255, 255, 255, 0.85);
@@ -40,6 +37,7 @@ header {
 }
 header img { height:60px; transition: transform 0.3s; }
 header img:hover { transform: scale(1.05); }
+
 #menu {
   height:100vh; display:flex; flex-direction:column;
   justify-content:center; align-items:center; gap:30px; opacity:1; transition:opacity 0.3s;
@@ -54,8 +52,10 @@ header img:hover { transform: scale(1.05); }
   z-index:0;
 }
 #menu > * { position: relative; z-index:1; }
+
 h1 { font-size:2.5em; text-shadow:0 0 15px rgba(0,0,0,0.4);}
 p.slogan { font-size:1.2em; color:rgba(255,255,255,0.8); margin-bottom:40px; }
+
 .menu-btn {
   background: var(--branco);
   color: var(--azul); font-weight:bold; padding:18px 50px;
@@ -73,8 +73,10 @@ p.slogan { font-size:1.2em; color:rgba(255,255,255,0.8); margin-bottom:40px; }
   transform: translateY(-3px) scale(1.05);
   background: var(--vermelho); color: var(--branco);
 }
+
 .form-container { display:none; padding:90px 20px 40px; animation: showForm 0.6s ease forwards; }
 @keyframes showForm { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+
 form {
   background: rgba(255,255,255,0.08); padding:30px; border-radius:16px;
   max-width:500px; margin:0 auto; box-shadow:0 0 25px rgba(0,0,0,0.5);
@@ -94,6 +96,7 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
   padding:10px 25px; border-radius:8px; cursor:pointer; margin-top:20px;
   transition:0.2s; box-shadow:0 0 8px var(--branco);}
 .voltar-btn:hover { background: rgba(255,255,255,0.2); }
+
 #mensagem,#mensagemGuarita { margin-top:20px; font-weight:bold; transition:opacity 1s ease; color:#00ff88; }
 .hidden { display:none; }
 </style>
@@ -172,19 +175,9 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
 const menu=document.getElementById('menu');
 const formChamado=document.getElementById('formChamado');
 const formGuarita=document.getElementById('formGuarita');
-document.getElementById('btnChamado').addEventListener('click', ()=>{
-  menu.style.display='none'; 
-  formChamado.style.display='block';
-});
-document.getElementById('btnGuarita').addEventListener('click', ()=>{
-  menu.style.display='none'; 
-  formGuarita.style.display='block';
-});
-function voltarMenu(){ 
-  formChamado.style.display='none'; 
-  formGuarita.style.display='none'; 
-  menu.style.display='flex'; 
-}
+document.getElementById('btnChamado').addEventListener('click', ()=>{ menu.style.display='none'; formChamado.style.display='block'; });
+document.getElementById('btnGuarita').addEventListener('click', ()=>{ menu.style.display='none'; formGuarita.style.display='block'; });
+function voltarMenu(){ formChamado.style.display='none'; formGuarita.style.display='none'; menu.style.display='flex'; }
 
 // Chamado TI
 const scriptChamado='https://script.google.com/macros/s/AKfycby7XQJ9bskuw9o5Fw7PbNVT1nKWCuY5gccV9AgH-PWwUq3994bz2bN_yivA_ci9NF6W/exec';
@@ -193,14 +186,7 @@ const outroInput=document.getElementById('outro-problema');
 const problemaSelect=document.getElementById('problema');
 const mensagem=document.getElementById('mensagem');
 problemaSelect.addEventListener('change',()=>{outroInput.classList.toggle('hidden',problemaSelect.value!=='Outros');});
-const tempos={
-  "Falha de impressão":"10 minutos","Impressora travada":"10 minutos",
-  "Abertura de tabela de preço":"10 minutos","Precificação de produtos":"20 minutos",
-  "Computador travando/lento":"20 minutos","Problemas de rede":"20 minutos",
-  "Sistema indisponível":"30 minutos","Cadastro RCA":"20 minutos",
-  "Erro Transmissão NFE":"30 minutos","Troca Toner Impressora":"15 minutos",
-  "Solicitar Periféricos (fones,mouse)":"15 minutos","Outros":"15 minutos"
-};
+const tempos={"Falha de impressão":"10 minutos","Impressora travada":"10 minutos","Abertura de tabela de preço":"10 minutos","Precificação de produtos":"20 minutos","Computador travando/lento":"20 minutos","Problemas de rede":"20 minutos","Sistema indisponível":"30 minutos","Cadastro RCA":"20 minutos","Erro Transmissão NFE":"30 minutos","Troca Toner Impressora":"15 minutos","Solicitar Periféricos (fones,mouse)":"15 minutos","Outros":"15 minutos"};
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const data=new FormData(form); const tempo=tempos[problemaSelect.value]||"15 minutos";
@@ -236,4 +222,3 @@ formG.addEventListener('submit',async e=>{
 
 </body>
 </html>
-
