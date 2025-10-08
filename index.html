@@ -94,7 +94,9 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
     <select name="setor" id="setor" required>
       <option value="">Selecione</option>
       <option>TI</option><option>Produção</option><option>Financeiro</option>
-      <option>Compras</option><option>Comercial</option>
+      <option>Compras</option><option>Comercial</option><option>RH</option>
+      <option>DP</option><option>Contabilidade</option><option>Marketing</option>
+      <option>Diretoria</option><option>Logística</option><option>Processos</option>
     </select>
     <label for="problema">Tipo de Problema:</label>
     <select name="problema" id="problema" required>
@@ -104,7 +106,7 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
       <option>Computador travando/lento</option><option>Problemas de rede</option>
       <option>Sistema indisponível</option><option>Cadastro RCA</option>
       <option>Erro Transmissão NFE</option><option>Troca Toner Impressora</option>
-      <option>Solicitar Periféricos (fones,mouse)</option><option>Outros</option>
+      <option>Solicitar Periféricos (fones,mouse)</option><option value="outros">Outros</option>
     </select>
     <div id="outro-problema" class="hidden">
       <label for="outro">Descreva o problema:</label>
@@ -147,29 +149,48 @@ document.getElementById('btnChamado').addEventListener('click', ()=>{menu.style.
 document.getElementById('btnGuarita').addEventListener('click', ()=>{menu.style.display='none'; formGuarita.style.display='block';});
 function voltarMenu(){ formChamado.style.display='none'; formGuarita.style.display='none'; menu.style.display='flex'; }
 
-// Chamado TI
-const scriptChamado='https://script.google.com/macros/s/AKfycby7XQJ9bskuw9o5Fw7PbNVT1nKWCuY5gccV9AgH-PWwUq3994bz2bN_yivA_ci9NF6W/exec';
+// 🧩 Chamado TI - com integração nova e tempo estimado
+const scriptChamado='https://script.google.com/macros/s/AKfycbw8bt5spo8b1Ve77XhYHC0N9jiMH6c-je-84C1zvsld1gHCcpUxAm-K9I1ySlW4huiJ/exec';
 const form=document.getElementById('form');
 const outroInput=document.getElementById('outro-problema');
 const problemaSelect=document.getElementById('problema');
 const mensagem=document.getElementById('mensagem');
-problemaSelect.addEventListener('change',()=>{outroInput.classList.toggle('hidden',problemaSelect.value!=='Outros');});
-const tempos={"Falha de impressão":"10 minutos","Impressora travada":"10 minutos","Abertura de tabela de preço":"10 minutos","Precificação de produtos":"20 minutos","Computador travando/lento":"20 minutos","Problemas de rede":"20 minutos","Sistema indisponível":"30 minutos","Cadastro RCA":"20 minutos","Erro Transmissão NFE":"30 minutos","Troca Toner Impressora":"15 minutos","Solicitar Periféricos (fones,mouse)":"15 minutos","Outros":"15 minutos"};
+
+const tempos={
+  "Falha de impressão":"10 minutos","Impressora travada":"10 minutos",
+  "Abertura de tabela de preço":"10 minutos","Precificação de produtos":"20 minutos",
+  "Computador travando/lento":"20 minutos","Problemas de rede":"20 minutos",
+  "Sistema indisponível":"30 minutos","Cadastro RCA":"20 minutos",
+  "Erro Transmissão NFE":"30 minutos","Troca Toner Impressora":"15 minutos",
+  "Solicitar Periféricos (fones,mouse)":"15 minutos","outros":"15 minutos","Outros":"15 minutos"
+};
+
+problemaSelect.addEventListener('change',()=>{outroInput.classList.toggle('hidden',problemaSelect.value!=='outros'&&problemaSelect.value!=='Outros');});
+
 form.addEventListener('submit',async e=>{
   e.preventDefault();
-  const data=new FormData(form); const tempo=tempos[problemaSelect.value]||"15 minutos";
+  const data=new FormData(form);
+  const tempo=tempos[problemaSelect.value]||"15 minutos";
   try{
     const response=await fetch(scriptChamado,{method:'POST',body:new URLSearchParams(data)});
     const result=await response.json();
     if(result.result==="success"){
       mensagem.innerHTML=`✅ Chamado enviado com sucesso!<br>⏳ Em até <b>${tempo}</b> nossa equipe entrará em contato ou resolverá o problema.`;
-      mensagem.style.opacity=1; setTimeout(()=>{mensagem.style.opacity=0;},5000);
-      form.reset(); outroInput.classList.add("hidden");
-    }else{throw new Error("Erro");}
-  }catch(err){mensagem.textContent="❌ Erro ao enviar chamado. Tente novamente."; mensagem.style.color="#ff4444"; mensagem.style.opacity=1; setTimeout(()=>mensagem.style.opacity=0,5000);}
+      mensagem.style.color="#00ff88";
+      mensagem.style.opacity=1;
+      form.reset();
+      outroInput.classList.add("hidden");
+      setTimeout(()=>mensagem.style.opacity=0,5000);
+    }else{throw new Error("Erro desconhecido");}
+  }catch(err){
+    mensagem.textContent="❌ Erro ao enviar chamado. Tente novamente.";
+    mensagem.style.color="#ff4444";
+    mensagem.style.opacity=1;
+    setTimeout(()=>mensagem.style.opacity=0,5000);
+  }
 });
 
-// Agendamento Guarita
+// 🧩 Agendamento Guarita (mantido)
 const scriptGuarita='https://script.google.com/macros/s/AKfycbzz-MYhY0WUgnhnqq9eQYzICaw_b62iXy-jZa0cnJfEmmL6hf2nrbwAYAZFdQETn3Pd/exec';
 const formG=document.getElementById('formGuaritaForm'); 
 const mensagemG=document.getElementById('mensagemGuarita');
@@ -185,7 +206,12 @@ formG.addEventListener('submit',async e=>{
       mensagemG.style.opacity=1; setTimeout(()=>mensagemG.style.opacity=0,5000);
       formG.reset();
     } else {throw new Error(result.message || "Erro");}
-  }catch(err){mensagemG.innerHTML="❌ Erro ao enviar. Tente novamente."; mensagemG.style.color="#ff4444"; mensagemG.style.opacity=1; setTimeout(()=>mensagemG.style.opacity=0,5000);}
+  }catch(err){
+    mensagemG.innerHTML="❌ Erro ao enviar. Tente novamente.";
+    mensagemG.style.color="#ff4444";
+    mensagemG.style.opacity=1;
+    setTimeout(()=>mensagemG.style.opacity=0,5000);
+  }
 });
 </script>
 
