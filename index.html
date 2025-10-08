@@ -203,15 +203,12 @@ const tempos={
   "Outros":"15 minutos"
 };
 
-problemaSelect.addEventListener('change',()=>{
-  outroInput.classList.toggle('hidden',problemaSelect.value!=='Outros');
-});
+problemaSelect.addEventListener('change',()=>{ outroInput.classList.toggle('hidden',problemaSelect.value!=='Outros'); });
 
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const data=new FormData(form);
   const tempo=tempos[problemaSelect.value]||"15 minutos";
-
   mensagem.textContent="⏳ Enviando chamado...";
   mensagem.style.color="#ffd700";
   mensagem.style.opacity=1;
@@ -219,22 +216,20 @@ form.addEventListener('submit',async e=>{
   fetch(scriptChamado,{method:'POST',body:new URLSearchParams(data)})
   .then(r=>r.json())
   .then(result=>{
-    if(result.result==="success"){
+    if(result.result==="success"){ 
       mensagem.innerHTML=`✅ Chamado enviado com sucesso!<br>⏳ Em até <b>${tempo}</b> nossa equipe entrará em contato ou resolverá o problema.`;
       mensagem.style.color="#00ff88";
     }else{mensagem.textContent="❌ Erro ao enviar. Tente novamente."; mensagem.style.color="#ff4444";}
   })
   .catch(()=>{mensagem.textContent="❌ Erro na conexão. Tente novamente."; mensagem.style.color="#ff4444";})
-  .finally(()=>{
-    form.reset(); outroInput.classList.add("hidden");
-    setTimeout(()=>mensagem.style.opacity=0,5000);
-  });
+  .finally(()=>{ form.reset(); outroInput.classList.add("hidden"); setTimeout(()=>mensagem.style.opacity=0,5000); });
 });
 
 // === GUARITA ===
-const scriptGuarita='https://script.google.com/macros/s/AKfycbzz-MYhY0WUgnhnqq9eQYzICaw_b62iXy-jZa0cnJfEmmL6hf2nrbwAYAZFdQETn3Pd/exec';
+const scriptGuarita='https://script.google.com/macros/s/AKfycbwzopSHsZowyHckgo-YuE6xl-LwcR_G7u463feO3hrM81GlK83OyVy3w_ip4xA7_uDx/exec';
 const formG=document.getElementById('formGuaritaForm');
 const mensagemG=document.getElementById('mensagemGuarita');
+
 formG.addEventListener('submit',e=>{
   e.preventDefault();
   const data=new FormData(formG);
@@ -245,11 +240,16 @@ formG.addEventListener('submit',e=>{
   fetch(scriptGuarita,{method:'POST',body:new URLSearchParams(data)})
   .then(r=>r.json())
   .then(result=>{
-    if(result.result==="success"){mensagemG.textContent="✅ Agendamento enviado com sucesso!"; mensagemG.style.color="#00ff88";}
-    else{mensagemG.textContent="❌ Erro ao enviar. Tente novamente."; mensagemG.style.color="#ff4444";}
+    if(result.result==="success"){ 
+      mensagemG.textContent="✅ Agendamento enviado com sucesso!";
+      mensagemG.style.color="#00ff88";
+    }else{
+      mensagemG.textContent="❌ Erro ao enviar. Tente novamente."; 
+      mensagemG.style.color="#ff4444";
+    }
   })
   .catch(()=>{mensagemG.textContent="❌ Erro na conexão. Tente novamente."; mensagemG.style.color="#ff4444";})
-  .finally(()=>{formG.reset(); setTimeout(()=>mensagemG.style.opacity=0,5000);});
+  .finally(()=>{ formG.reset(); setTimeout(()=>mensagemG.style.opacity=0,5000); });
 });
 </script>
 </body>
